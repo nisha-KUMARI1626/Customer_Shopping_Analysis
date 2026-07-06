@@ -1,4 +1,10 @@
+from operator import index
+
 import pandas as pd
+import numpy as np
+from fontTools.misc.filenames import userNameToFileName
+from mpl_toolkits.axes_grid1 import host_subplot
+from sqlalchemy import create_engine
 
 # here import data
 df = pd.read_csv("C:/Users/PANKAJ KUMAR/OneDrive/Desktop/collegeProject/customer_shopping_behavior.csv")
@@ -49,6 +55,24 @@ df = df.drop('promo_code_used',axis=1)
 
 print(df.columns)
 
+
+# here we stable the connection between postgre and python
+
+# connect to postgresql
+username = "postgres"
+password = "password"
+host = "localhost"
+port = "5432"
+database = "customer_behavior"
+
+engine = create_engine(
+    f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}")
+
+# load dataframe into postgresql
+
+table_name = "customer"
+df.to_sql(table_name, engine,if_exists=  "replace", index =False)
+print(f"Data successfully loaded into table '{table_name}' in database '{database}'.")
 
 
 
